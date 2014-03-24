@@ -164,7 +164,7 @@ class JobsController < ApplicationController
       File.delete("Outputfile.txt")
     end
 
-    system "C:\\GAMS\\win64\\24.2\\gams RCPSP_Modell"
+    system "C:\\GAMS\\win64\\24.1\\gams RCPSP_Modell"
     if File.exists?("Outputfile.txt")
       flash[:success] = "Optimization done!"
     else
@@ -193,39 +193,11 @@ class JobsController < ApplicationController
     else
       flash.now[:not_available] = "Problem not solved!"
       @jobs = Job.all
-      redirect_to jobs_url
+      redirect_to current_user
     end
   end
 
-  def read_solution
-
-    if File.exist?("Outputfile.txt")
-      fi=File.open("Outputfile.txt", "r")
-      line=fi.readline
-      sa=line.split(" ")
-      @objective_function_value=sa[1]
-      fi.each { |line|
-        sa=line.split(";")
-        sa0=sa[0].delete "j "
-#        sa1=sa[1].delete "t "
-        sa1=sa[1].delete " \n"
-        al=Job.find_by_id(sa0)
-        al.end=sa1.to_i-1
-        al.begin=sa1.to_i-1-al.duration
-        al.save
-      }
-      fi.close
-      @jobs = Job.all
-      render "jobs/index"
-
-    else
-      flash.now[:not_available] = "Problem not solved!"
-      @jobs = Job.all
-      redirect_to jobs_url
-    end
-  end
-
-  def delete_solution
+   def delete_solution
     if File.exists?("Outputfile.txt")
       File.delete("Outputfile.txt")
     end
