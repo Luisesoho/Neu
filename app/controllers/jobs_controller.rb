@@ -1,6 +1,8 @@
 class JobsController < ApplicationController
 
   before_filter :signed_in_user
+  before_filter :admin_user,     only: :load_project
+
 
   def index
     @jobs = Job.all
@@ -60,10 +62,6 @@ class JobsController < ApplicationController
   end
 
   def solve_problem
-    if File.exist?("Inputfile.inc")
-      File.delete("Inputfile.inc")
-    end
-
     @jobs = Job.all
     @jobs.each { |jo|
       jo.fez = jo.duration
@@ -84,7 +82,6 @@ class JobsController < ApplicationController
         if jo.id == re.job_id
           jo.sez = Job.sum('duration')
         end
-        jo.ssz = jo.sez-jo.duration
         jo.save
       }
     }
@@ -92,15 +89,17 @@ class JobsController < ApplicationController
     @jobs.reverse_each{|jo|
       @relations.each{|re|
         if jo.id == re.job_id
-          if jo.sez > re.successor.ssz then
-            jo.sez = re.successor.ssz
+          if jo.sez >= (re.successor.sez-re.successor.duration) then
+            jo.sez = re.successor.sez-re.successor.duration
             jo.save
           end
         end
       }
-      jo.ssz = jo.sez - jo.duration
-      jo.save
     }
+
+    if File.exist?("Inputfile.inc")
+      File.delete("Inputfile.inc")
+    end
 
     f=File.new("Inputfile.inc", "w")
 
@@ -223,6 +222,10 @@ class JobsController < ApplicationController
       store_location
       redirect_to signin_path, notice: "Bitte melden Sie sich an."
     end
+  end
+
+  def admin_user
+    redirect_to(root_url) unless current_user.admin?
   end
 
 end
