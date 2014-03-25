@@ -6,16 +6,13 @@ class ResourcesController < ApplicationController
     @resource = Resource.new
   end
 
+
   def index
     @resources = Resource.all
-  end
-
- # def show
- #   @resource = Resource.find(params[:id])
- # end
-
-  def edit
-    @resource = Resource.find(params[:id])
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json {render json: @resources}
+    end
   end
 
   def update
@@ -23,7 +20,7 @@ class ResourcesController < ApplicationController
 
     if @resource.update_attributes(params[:resource])
       flash[:success] = "Update successful!"
-      redirect_to resources_path
+      redirect_to (resources_path)
     else
       render 'edit'
     end

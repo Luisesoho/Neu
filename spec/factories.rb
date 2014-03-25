@@ -12,6 +12,6 @@ FactoryGirl.define do
 
   factory :resource do
     name "Lorem ipsum"
-    capacity
+    capacity 5
   end
 end

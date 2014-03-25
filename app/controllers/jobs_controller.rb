@@ -6,20 +6,15 @@ class JobsController < ApplicationController
 
   def index
     @jobs = Job.all
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json {render json: @jobs}
+    end
   end
 
   def new
     @job = Job.new
   end
-
-
-#  def show
-#    @job = Job.find(params[:id])
-#  end
-
-#  def edit
-#    @job = Job.find(params[:id])
-#  end
 
   def create
     @job = Job.new (params[:job])
@@ -164,6 +159,7 @@ class JobsController < ApplicationController
     end
 
     system "C:\\GAMS\\win64\\24.1\\gams RCPSP_Modell"
+
     if File.exists?("Outputfile.txt")
       flash[:success] = "Optimization done!"
     else
@@ -178,7 +174,6 @@ class JobsController < ApplicationController
       fi.each { |line|
         sa=line.split(";")
         sa0=sa[0].delete "j "
-#        sa1=sa[1].delete "t "
         sa1=sa[1].delete " \n"
         al=Job.find_by_id(sa0)
         al.end=sa1.to_i-1
@@ -203,6 +198,8 @@ class JobsController < ApplicationController
 
     @jobs = Job.all
     @jobs.each { |jo|
+      jo.fez=nil
+      jo.sez=nil
       jo.begin=nil
       jo.end=nil
       jo.save

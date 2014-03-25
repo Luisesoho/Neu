@@ -22,10 +22,13 @@ Objective function value: <b><%=   @objective_function_value %></b><br>   <br>  
             <td><%= job.sez %></td>
             <td><%= job.begin %></td>
             <td><%= job.end %></td>
-              <td><%= link_to 'Destroy', job, method: :delete, data: {confirm: 'Are you sure?'} %></td>
           </tr>
       <% end %>
     </table>
+
+   <br>
+    <div class="navigation-left" style="float:left">
+      &lArr; <%= link_to  'Go to Main Menu', current_user %>    </div><br>
 
 <%else%>
 <h1>Jobs</h1>
@@ -44,7 +47,6 @@ Objective function value: <b><%=   @objective_function_value %></b><br>   <br>  
           </tr>
       <% end %>
     </table>
-<% end %>
 
 <br/>
 
@@ -56,3 +58,4 @@ Objective function value: <b><%=   @objective_function_value %></b><br>   <br>  
 <%= link_to 'Continue with Relations', relations_path %>     &#8658;    </div> <br>
 <div class="navigation-left" style="float:left">
   &lArr; <%= link_to  'Go to Main Menu', current_user %>    </div><br>
+<% end %>

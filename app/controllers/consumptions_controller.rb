@@ -7,6 +7,10 @@ class ConsumptionsController < ApplicationController
 
   def index
     @consumptions = Consumption.all
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json {render json: @consumption}
+    end
   end
 
   def show
